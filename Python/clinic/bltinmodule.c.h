@@ -120,6 +120,21 @@ PyDoc_STRVAR(builtin_abs__doc__,
 #define BUILTIN_ABS_METHODDEF    \
     {"abs", (PyCFunction)builtin_abs, METH_O, builtin_abs__doc__},
 
+PyDoc_STRVAR(builtin_neg__doc__,
+"neg($module, x, /)\n"
+"--\n"
+"\n"
+"Return the negative value of the argument.\n"
+"\n"
+"   >>> neg(1)\n"
+"   \'-1\'"
+"\n"
+"   >>> neg(-1)\n"
+"   \'-1\'");
+
+#define BUILTIN_NEG_METHODDEF    \
+    {"neg", (PyCFunction)builtin_neg, METH_O, builtin_neg__doc__},
+
 PyDoc_STRVAR(builtin_all__doc__,
 "all($module, iterable, /)\n"
 "--\n"

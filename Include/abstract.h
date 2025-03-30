@@ -503,6 +503,8 @@ PyAPI_FUNC(PyObject *) PyNumber_Positive(PyObject *o);
    This is the equivalent of the Python expression: abs(o). */
 PyAPI_FUNC(PyObject *) PyNumber_Absolute(PyObject *o);
 
+PyAPI_FUNC(PyObject *) PyNumber_Negate(PyObject *o);
+
 /* Returns the bitwise negation of 'o' on success, or NULL on failure.
 
    This is the equivalent of the Python expression: ~o. */

@@ -303,6 +303,14 @@ builtin_abs(PyObject *module, PyObject *x)
     return PyNumber_Absolute(x);
 }
 
+static PyObject *
+builtin_neg(PyObject *module, PyObject *x)
+{
+//    PyObject *abs = PyNumber_Absolute(x);
+//    return PyNumber_Negative(abs);
+    return PyNumber_Negate(x);
+}
+
 /*[clinic input]
 all as builtin_all
 
@@ -3275,6 +3283,7 @@ static PyMethodDef builtin_methods[] = {
      METH_FASTCALL | METH_KEYWORDS, build_class_doc},
     BUILTIN___IMPORT___METHODDEF
     BUILTIN_ABS_METHODDEF
+    BUILTIN_NEG_METHODDEF  // here
     BUILTIN_ALL_METHODDEF
     BUILTIN_ANY_METHODDEF
     BUILTIN_ASCII_METHODDEF

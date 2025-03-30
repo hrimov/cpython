@@ -1384,6 +1384,21 @@ UNARY_FUNC(PyNumber_Invert, nb_invert, __invert__, "unary ~")
 UNARY_FUNC(PyNumber_Absolute, nb_absolute, __abs__, "abs()")
 
 
+// Kinda duplicating logic of UNARY_FUNCTION macros
+PyObject * PyNumber_Negate(PyObject *object) {
+    if (object == NULL) {
+        return null_error();
+    }
+
+    PyNumberMethods *methods = Py_TYPE(object)->tp_as_number;
+    if (methods && methods->nb_negative) {
+        PyObject *res = methods->nb_negative(object);
+        assert(_Py_CheckSlotResult(object, "neg", res != NULL));
+        return res;
+    }
+    return type_error("bad operand type for neg(): '%.200s'", object);
+}
+
 int
 PyIndex_Check(PyObject *obj)
 {
