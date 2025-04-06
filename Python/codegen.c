@@ -2169,6 +2169,32 @@ codegen_while(compiler *c, stmt_ty s)
 }
 
 static int
+codegen_until(compiler *c, stmt_ty s)
+{
+    NEW_JUMP_TARGET_LABEL(c, loop);
+    NEW_JUMP_TARGET_LABEL(c, end);
+    NEW_JUMP_TARGET_LABEL(c, anchor);
+
+    USE_LABEL(c, loop);
+
+    RETURN_IF_ERROR(_PyCompile_PushFBlock(c, LOC(s), COMPILE_FBLOCK_WHILE_LOOP, loop, end, NULL));
+    RETURN_IF_ERROR(codegen_jump_if(c, LOC(s), s->v.Until.test, anchor, 1));  // 1 = jump if true
+
+    VISIT_SEQ(c, stmt, s->v.Until.body);
+    ADDOP_JUMP(c, NO_LOCATION, JUMP, loop);
+
+    _PyCompile_PopFBlock(c, COMPILE_FBLOCK_WHILE_LOOP, loop);
+
+    USE_LABEL(c, anchor);
+    if (s->v.Until.orelse) {
+        VISIT_SEQ(c, stmt, s->v.Until.orelse);
+    }
+
+    USE_LABEL(c, end);
+    return SUCCESS;
+}
+
+static int
 codegen_return(compiler *c, stmt_ty s)
 {
     location loc = LOC(s);
@@ -3006,6 +3032,9 @@ codegen_visit_stmt(compiler *c, stmt_ty s)
         break;
     case While_kind:
         CODEGEN_COND_BLOCK(codegen_while, c, s);
+        break;
+    case Until_kind:
+        CODEGEN_COND_BLOCK(codegen_until, c, s);
         break;
     case If_kind:
         CODEGEN_COND_BLOCK(codegen_if, c, s);

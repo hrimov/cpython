@@ -733,6 +733,14 @@ astfold_stmt(stmt_ty node_, PyArena *ctx_, _PyASTOptimizeState *state)
         CALL_SEQ(astfold_stmt, stmt, node_->v.While.orelse);
         break;
     }
+    case Until_kind: {
+        CALL(astfold_expr, expr_ty, node_->v.Until.test);
+        BEFORE_LOOP_BODY(state, node_);
+        CALL_SEQ(astfold_stmt, stmt, node_->v.Until.body);
+        AFTER_LOOP_BODY(state);
+        CALL_SEQ(astfold_stmt, stmt, node_->v.Until.orelse);
+        break;
+    }
     case If_kind:
         CALL(astfold_expr, expr_ty, node_->v.If.test);
         CALL_SEQ(astfold_stmt, stmt, node_->v.If.body);
